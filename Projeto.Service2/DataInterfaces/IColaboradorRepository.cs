@@ -1,7 +1,6 @@
-﻿using Projeto.Models;
-using Projeto.Service.DataInterfaces;
+﻿using Projeto.Domain.Models;
 
-namespace Projeto.Domain.DataInterfaces
+namespace Projeto.Service
 {
     public interface IColaboradorRepository : IGenericRepository<Colaborador>
     {

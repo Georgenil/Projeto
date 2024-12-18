@@ -1,6 +1,4 @@
-﻿using Projeto.Domain.Models;
-
-namespace Projeto.Models
+﻿namespace Projeto.Domain.Models
 {
     public class Colaborador : Base
     {

@@ -1,10 +1,10 @@
 ﻿using Projeto.Domain.Models;
-using Projeto.Domain.ViewModels;
+using Projeto.Infra.Utils.ExtensionMethod;
 
-namespace Projeto.Service.Interfaces
+namespace Projeto.Service
 {
     public interface IUserService
     {
-        Task<Response> Register(User user);
+        Task<Response<User>> Register(User user);
     }
 }

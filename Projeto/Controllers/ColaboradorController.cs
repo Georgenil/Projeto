@@ -1,19 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Projeto.Application.Interfaces;
-using Projeto.Domain.Utils;
-using Projeto.Domain.ViewModels;
-using Projeto.Models;
+using Projeto.Facade;
+using Projeto.Infra.Utils.ExtensionMethod;
 
 namespace Projeto.Controllers
 {
     [Route("colaborador")]
     [ApiController]
-    public class ColaboradorController
+    public class ColaboradorController :ControllerBase
     {
-        private readonly IColaboradorService _colaboradorService;
-        public ColaboradorController(IColaboradorService colaboradorService)
+        private readonly IColaboradorFacade _colaboradorFacade;
+        public ColaboradorController(IColaboradorFacade colaboradorFacade)
         {
-            _colaboradorService = colaboradorService;
+            _colaboradorFacade = colaboradorFacade;
         }
 
 
@@ -22,28 +20,28 @@ namespace Projeto.Controllers
         /// </summary>
         /// <returns>Lista de colaboradores</returns>
         [HttpGet("listar")]
-        public async Task<IActionResult> BuscarTodos()
+        public IActionResult BuscarTodos()
         {
-            return new ResponseHelper().CreateResponse(await _colaboradorService.BuscarTodos());
+            return  _colaboradorFacade.BuscarTodos().GetResult();
         }
 
 
-        [HttpPost("cadastrar")]
-        public async Task<IActionResult> Cadastrar(ColaboradorViewModel model)
-        {
-            return new ResponseHelper().CreateResponse(await _colaboradorService.Cadastrar(model));
-        }
+        //[HttpPost("cadastrar")]
+        //public async Task<IActionResult> Cadastrar(ColaboradorViewModel model)
+        //{
+        //    return new ResponseHelper().CreateResponse(await _colaboradorService.Cadastrar(model));
+        //}
 
-        [HttpPost("editar")]
-        public async Task<IActionResult> Editar([FromBody] ColaboradorViewModel model)
-        {
-            return new ResponseHelper().CreateResponse(await _colaboradorService.Editar(model));
-        }
+        //[HttpPost("editar")]
+        //public async Task<IActionResult> Editar([FromBody] ColaboradorViewModel model)
+        //{
+        //    return new ResponseHelper().CreateResponse(await _colaboradorService.Editar(model));
+        //}
 
-        [HttpPost("remover")]
-        public async Task<IActionResult> Remover([FromBody] int id)
-        {
-            return new ResponseHelper().CreateResponse(await _colaboradorService.Remover(id));
-        }
+        //[HttpPost("remover")]
+        //public async Task<IActionResult> Remover([FromBody] int id)
+        //{
+        //    return new ResponseHelper().CreateResponse(await _colaboradorService.Remover(id));
+        //}
     }
 }

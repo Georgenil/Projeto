@@ -1,6 +1,6 @@
 ﻿using Projeto.Domain.Models;
 
-namespace Projeto.Service.DataInterfaces
+namespace Projeto.Service
 {
     public interface IUserRepository : IGenericRepository<User>
     {

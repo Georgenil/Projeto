@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Projeto.Domain.Models;
-using Projeto.Domain.Utils;
-using Projeto.Domain.ViewModels;
-using Projeto.Service.Interfaces;
-using System.Security.Cryptography;
+using Projeto.Infra.Utils.ExtensionMethod;
+using Projeto.Service;
 
 namespace Projeto.Controllers
 {
@@ -21,7 +18,7 @@ namespace Projeto.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(User request)
         {
-            return new ResponseHelper().CreateResponse(await _userService.Register(request));
+            return await _userService.Register(request).GetAsyncResult();
 
         }
 

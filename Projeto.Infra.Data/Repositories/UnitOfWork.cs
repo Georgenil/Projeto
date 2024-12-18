@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Projeto.Infra.Data;
-using Projeto.Service.DataInterfaces;
+using Projeto.Service;
 
-namespace Projeto.Infra.Data.Repositories
+namespace Projeto.Infra.Data
 {
     public class UnitOfWork : IUnitOfWork
     {

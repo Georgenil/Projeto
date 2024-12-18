@@ -1,14 +1,9 @@
 ﻿using Projeto.Domain.Models;
-using Projeto.Domain.ViewModels;
-using Projeto.Models;
-using Projeto.Service.DataInterfaces;
-using Projeto.Service.Interfaces;
+using Projeto.Infra.Utils.ExtensionMethod;
 using Projeto.Utils.ExtensionMethod;
-using System.Globalization;
 using System.Net;
-using System.Security.Cryptography;
 
-namespace Projeto.Service.Services
+namespace Projeto.Service
 {
     public class UserService : IUserService
     {
@@ -21,13 +16,13 @@ namespace Projeto.Service.Services
             _userRepository = userRepository;
         }
 
-        public async Task<Response> Register(User user)
+        public async Task<Response<User>> Register(User user)
         {
-            Response response = new Response();
+            var response = new Response<User>();
 
             try
             {
-                if (string.IsNullOrEmpty(user.Password)) return new Response(404, "Senha é obrigatória");
+                if (string.IsNullOrEmpty(user.Password)) return new Response<User>(HttpStatusCode.NotFound, "Senha é obrigatória");
 
                 user.GUID = Guid.NewGuid();
                 user.Login = user.Login;
@@ -42,9 +37,8 @@ namespace Projeto.Service.Services
                 if (commited > 0 && user.Id > 0)
                 {
                     user.Password = null;
-                    response.StatusCode = (int)HttpStatusCode.OK;
-                    response.Content = user;
-                    return new Response(200, user);
+                    response.Status = HttpStatusCode.OK;
+                    response.Entity = user;
                 }
                 else
                 {
@@ -54,7 +48,6 @@ namespace Projeto.Service.Services
             catch (Exception ex)
             {
                 response.Message = $"Ocorreu um erro ao registrar o usuário. Login: {user.Login}";
-                response.Content = ex;
             }
             return response; 
         }

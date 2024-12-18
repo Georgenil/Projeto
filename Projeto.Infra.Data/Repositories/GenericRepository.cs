@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Projeto.Service.DataInterfaces;
+using Projeto.Service;
 using Projeto.Utils.ExtensionMethod;
 
 namespace Projeto.Infra.Data.Repositories
@@ -70,6 +70,11 @@ namespace Projeto.Infra.Data.Repositories
         public virtual T Add(T entity)
         {
             return _dbset.Add(entity).Entity;
+        }
+
+        public virtual async Task<T> AddAsync(T entity)
+        {
+            return _dbset.AddAsync(entity).Result.Entity;
         }
 
         public void AddRange(IEnumerable<T> list)

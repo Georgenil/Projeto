@@ -1,12 +1,13 @@
-﻿using Projeto.Domain.ViewModels;
+﻿using Projeto.Domain.Models;
+using Projeto.Infra.Utils.ExtensionMethod;
 
-namespace Projeto.Application.Interfaces
+namespace Projeto.Service
 {
     public interface IColaboradorService
     {
-        Task<Response> BuscarTodos();
-        Task<Response> Cadastrar(ColaboradorViewModel model);
-        Task<Response> Editar(ColaboradorViewModel model);
-        Task<Response> Remover(int id);
+        Response<IList<Colaborador>> BuscarTodos();
+        Task<Response<Colaborador>> Cadastrar(Colaborador model);
+        Task<Response<Colaborador>> Editar(Colaborador model);
+        Task<Response<bool>> Remover(int id);
     }
 }

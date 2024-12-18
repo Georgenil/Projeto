@@ -1,10 +1,8 @@
-﻿using Projeto.Domain.DataInterfaces;
-using Projeto.Application.Interfaces;
-using Projeto.Domain.ViewModels;
-using Projeto.Models;
-using Projeto.Service.DataInterfaces;
+﻿using Projeto.Domain.Models;
+using Projeto.Infra.Utils.ExtensionMethod;
+using System.Net;
 
-namespace Projeto.Service.Services
+namespace Projeto.Service
 {
     public class ColaboradorService : IColaboradorService
     {
@@ -16,20 +14,20 @@ namespace Projeto.Service.Services
             _unitOfWork = unitOfWork;
             _colaboradorRepository = colaboradorRepository;
         }
-        public async Task<Response> BuscarTodos()
+        public Response<IList<Colaborador>> BuscarTodos()
         {
+            var response = new Response<IList<Colaborador>>();
+
             try
             {
-                var colaboradores = await _colaboradorRepository.GetAllAsync();
-
-                if (colaboradores == null) return new Response(404, "Não existem colaboradores cadastrados no banco.");
-
-                return new Response(200, colaboradores);
+                response.Entity = _colaboradorRepository.GetAll();
             }
             catch
             {
-                return new Response(500, "Erro ao buscar colaboradores.");
+                return new Response<IList<Colaborador>>(HttpStatusCode.InternalServerError, "Erro ao buscar fornecedores.");
             }
+
+            return response;
         }
 
         //public async Task<Response> BuscarPorId(int id)
@@ -44,78 +42,86 @@ namespace Projeto.Service.Services
         //    }
         //    catch
         //    {
-        //        return new Response(500, "Erro ao buscar colaborador.");
+        //        return new Response(HttpStatusCode.InternalServerError, "Erro ao buscar colaborador.");
         //    }
         //}
 
-        public async Task<Response> Cadastrar(ColaboradorViewModel model)
+        public async Task<Response<Colaborador>> Cadastrar(Colaborador colaborador)
         {
+            var response = new Response<Colaborador>();
             try
             {
-                if (model == null) return new Response(404, "Colaborador nulo");
+                if (colaborador == null) return new Response<Colaborador>(HttpStatusCode.NotFound, "Colaborador nulo");
 
-                var colaboradorEncontrado = await _colaboradorRepository.FindFirstByAsync(x => x.Nome.ToLower().Trim().Equals(model.Nome.ToLower().Trim()));
+                var colaboradorBD = _colaboradorRepository.FindFirstBy(x => x.Nome.ToLower().Trim().Equals(colaborador.Nome.ToLower().Trim()));
 
-                if (colaboradorEncontrado != null) return new Response(500, "Este colaborador já foi cadastrado");
+                if (colaboradorBD != null) return new Response<Colaborador>(HttpStatusCode.InternalServerError, "Este colaborador já foi cadastrado");
 
-                Colaborador colaborador = new()
-                {
-                    Nome = model.Nome,
-                };
 
-                var colaboradorBd = _colaboradorRepository.Add(colaborador);
-                _unitOfWork.Commit();
-
-                return new Response(200, colaboradorBd);
-            }
-            catch
-            {
-                return new Response(500, "Erro ao cadastrar colaboradores.");
-            }
-        }
-
-        public async Task<Response> Editar(ColaboradorViewModel model)
-        {
-            try
-            {
-                if (model == null) return new Response(500, "Informe os novos dados do colaborador");
-
-                var colaboradorEncontrado = await _colaboradorRepository.FindFirstByAsync(x => x.Id == model.Id);
-
-                if (colaboradorEncontrado == null) return new Response(500, "Não é possível encontrar o colaborador");
-
-                colaboradorEncontrado.Nome = model.Nome;
-
-                _colaboradorRepository.Edit(colaboradorEncontrado);
+                await _colaboradorRepository.AddAsync(colaborador);
                 await _unitOfWork.CommitAsync();
 
-                return new Response(200, model);
+                response.Entity = colaborador;
             }
             catch
             {
-                return new Response(500, "Erro ao atualizar colaboradores");
-
+                return new Response<Colaborador>(HttpStatusCode.InternalServerError, "Erro ao cadastrar colaboradores.");
             }
+
+            return response;
         }
 
-        public async Task<Response> Remover(int id)
+        public async Task<Response<Colaborador>> Editar(Colaborador model)
         {
+            var response = new Response<Colaborador>();
+
+            try
+            {
+                if (model == null) return new Response<Colaborador>(HttpStatusCode.InternalServerError, "Informe os novos dados do colaborador");
+
+                var colaboradorBD = await _colaboradorRepository.FindFirstByAsync(x => x.Id == model.Id);
+
+                if (colaboradorBD == null) return new Response<Colaborador>(HttpStatusCode.InternalServerError, "Não é possível encontrar o colaborador");
+
+                colaboradorBD.Nome = model.Nome;
+
+                _colaboradorRepository.Edit(colaboradorBD);
+                await _unitOfWork.CommitAsync();
+
+                response.Entity = colaboradorBD;
+            }
+            catch
+            {
+                return new Response<Colaborador>(HttpStatusCode.InternalServerError, "Erro ao atualizar colaboradores");
+
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> Remover(int id)
+        {
+            var response = new Response<bool>();
+
             try
             {
                 var colaborador = await _colaboradorRepository.FindFirstByAsync(x => x.Id == id);
 
-                if (colaborador == null) return new Response(500, "Colaborador não encontrado");
+                if (colaborador == null) return new Response<bool>(HttpStatusCode.InternalServerError, "Colaborador não encontrado");
 
 
                 _colaboradorRepository.Delete(colaborador);
-                _unitOfWork.Commit();
+                await _unitOfWork.CommitAsync();
 
-                return new Response(200, "Colaborador removido com sucesso!");
+                response.Entity = true;
+                response.Status = HttpStatusCode.OK;
+                response.Message = "Colaborador removido com sucesso!";
             }
             catch
             {
-                return new Response(500, "Erro ao exluir colaborador");
+                return new Response<bool>(HttpStatusCode.InternalServerError, "Erro ao exluir colaborador");
             }
+
+            return response;
         }
     }
 }

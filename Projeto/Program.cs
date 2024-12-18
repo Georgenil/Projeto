@@ -34,6 +34,8 @@ builder.Services.AddServices();
 // Configurando Swagger
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 var app = builder.Build();
 

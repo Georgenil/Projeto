@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Projeto.Domain.Models;
 using Projeto.Infra.Data.Mapping;
-using Projeto.Models;
+using Projeto.Domain.Models;
 
 namespace Projeto.Infra.Data
 {

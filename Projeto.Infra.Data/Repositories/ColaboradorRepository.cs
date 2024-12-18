@@ -1,6 +1,5 @@
-﻿using Projeto.Domain.DataInterfaces;
-using Projeto.Models;
-using Projeto.Service.DataInterfaces;
+﻿using Projeto.Domain.Models;
+using Projeto.Service;
 
 namespace Projeto.Infra.Data.Repositories
 {

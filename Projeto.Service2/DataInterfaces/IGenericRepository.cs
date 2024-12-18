@@ -1,4 +1,4 @@
-﻿namespace Projeto.Service.DataInterfaces
+﻿namespace Projeto.Service
 {
     public interface IGenericRepository<T> where T : class
     {
@@ -11,6 +11,7 @@
         T FindFirstBy(System.Linq.Expressions.Expression<Func<T, bool>> predicate, params string[] includeProperties);
         Task<T> FindFirstByAsync(System.Linq.Expressions.Expression<Func<T, bool>> predicate, params string[] includeProperties);
         T Add(T entity);
+        Task<T> AddAsync(T entity);
         void AddRange(IEnumerable<T> list);
         void RemoveRange(IEnumerable<T> list);
         void RemoveAll();

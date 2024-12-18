@@ -1,9 +1,9 @@
-﻿using Projeto.Application.Interfaces;
-using Projeto.Domain.DataInterfaces;
+﻿using Projeto.Facade;
+using Projeto.Facade.Facades;
+using Projeto.Facade.Interfaces;
+using Projeto.Infra.Data;
 using Projeto.Infra.Data.Repositories;
-using Projeto.Service.DataInterfaces;
-using Projeto.Service.Interfaces;
-using Projeto.Service.Services;
+using Projeto.Service;
 
 namespace Projeto.Configurations
 {
@@ -14,8 +14,10 @@ namespace Projeto.Configurations
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
             services.AddScoped<IColaboradorService, ColaboradorService>();
+            services.AddScoped<IColaboradorFacade, ColaboradorFacade>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserFacade, UserFacade>();
         }
     }
 }
