@@ -43,10 +43,9 @@ namespace Projeto.Infra.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<byte[]>("PasswordHash")
+                    b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varbinary(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

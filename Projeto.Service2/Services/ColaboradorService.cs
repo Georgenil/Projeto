@@ -4,7 +4,7 @@ using Projeto.Domain.ViewModels;
 using Projeto.Models;
 using Projeto.Service.DataInterfaces;
 
-namespace Projeto.Application.Services
+namespace Projeto.Service.Services
 {
     public class ColaboradorService : IColaboradorService
     {
@@ -83,7 +83,7 @@ namespace Projeto.Application.Services
                 var colaboradorEncontrado = await _colaboradorRepository.FindFirstByAsync(x => x.Id == model.Id);
 
                 if (colaboradorEncontrado == null) return new Response(500, "Não é possível encontrar o colaborador");
-               
+
                 colaboradorEncontrado.Nome = model.Nome;
 
                 _colaboradorRepository.Edit(colaboradorEncontrado);

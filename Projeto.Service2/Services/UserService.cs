@@ -1,6 +1,11 @@
-﻿using Projeto.Domain.ViewModels;
+﻿using Projeto.Domain.Models;
+using Projeto.Domain.ViewModels;
+using Projeto.Models;
 using Projeto.Service.DataInterfaces;
 using Projeto.Service.Interfaces;
+using Projeto.Utils.ExtensionMethod;
+using System.Globalization;
+using System.Net;
 using System.Security.Cryptography;
 
 namespace Projeto.Service.Services
@@ -16,23 +21,42 @@ namespace Projeto.Service.Services
             _userRepository = userRepository;
         }
 
-        public async Task<Response> Register(UserViewModel user)
+        public async Task<Response> Register(User user)
         {
+            Response response = new Response();
 
-            CreatePasswordHash(user.Password, out byte[] passwordHash);
-
-            user.GUID = Guid.NewGuid();
-            user.Login = user.Login;
-            user.Password = passwordHash;
-            user.Ativo = true;
-        }
-
-        private void CreatePasswordHash(string password, out byte[] passwordHash)
-        {
-            using (var hmac = new HMACSHA512())
+            try
             {
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                if (string.IsNullOrEmpty(user.Password)) return new Response(404, "Senha é obrigatória");
+
+                user.GUID = Guid.NewGuid();
+                user.Login = user.Login;
+                user.Password = user.Password.ToSha256();
+                user.Ativo = true;
+
+
+                _userRepository.Add(user);
+
+                int commited = await _unitOfWork.CommitAsync();
+
+                if (commited > 0 && user.Id > 0)
+                {
+                    user.Password = null;
+                    response.StatusCode = (int)HttpStatusCode.OK;
+                    response.Content = user;
+                    return new Response(200, user);
+                }
+                else
+                {
+                    throw new ApplicationException("An error occurred while creating the user");
+                }
             }
+            catch (Exception ex)
+            {
+                response.Message = $"Ocorreu um erro ao registrar o usuário. Login: {user.Login}";
+                response.Content = ex;
+            }
+            return response; 
         }
     }
 }

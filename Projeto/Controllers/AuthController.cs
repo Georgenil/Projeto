@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Projeto.Domain.Models;
+using Projeto.Domain.Utils;
 using Projeto.Domain.ViewModels;
+using Projeto.Service.Interfaces;
 using System.Security.Cryptography;
 
 namespace Projeto.Controllers
@@ -10,25 +12,25 @@ namespace Projeto.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User();
+        private readonly IUserService _userService;
+        public AuthController(IUserService userService)
+        {
+           _userService = userService;
+        }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserViewModel request)
+        public async Task<IActionResult> Register(User request)
         {
-            CreatePasswordHash(request.Password, out byte[] passwordHash);
+            return new ResponseHelper().CreateResponse(await _userService.Register(request));
 
-            user.Login = request.Login;
-            user.PasswordHash = passwordHash;
-
-            return Ok(user);
         }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash)
-        {
-            using(var hmac = new HMACSHA512())
-            {
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
-        }
+        //private void CreatePasswordHash(string password, out byte[] passwordHash)
+        //{
+        //    using(var hmac = new HMACSHA512())
+        //    {
+        //        passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        //    }
+        //}
     }
 }

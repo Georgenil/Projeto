@@ -21,6 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projeto.Infra.Data", "Proje
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projeto.Service", "Projeto.Service2\Projeto.Service.csproj", "{94110A74-3B5F-4874-9F47-AAFFB4A0D9EC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7345C487-C9C5-4B2D-BD63-D54C2A6123C1} = {7345C487-C9C5-4B2D-BD63-D54C2A6123C1}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projeto.InfraUtils", "Projeto.InfraUtils\Projeto.InfraUtils.csproj", "{7345C487-C9C5-4B2D-BD63-D54C2A6123C1}"
 EndProject

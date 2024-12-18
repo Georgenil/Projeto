@@ -15,8 +15,7 @@ namespace Projeto.Infra.Data.Mapping
             builder.Property(u => u.Login)
                 .HasMaxLength(ModelMaxLengthConstants.Usuario.Login);
 
-            builder.Property(u => u.Password)
-                .HasMaxLength(ModelMaxLengthConstants.Usuario.Senha);
+            builder.Property(u => u.Password);
 
             builder.Property(t => t.Ativo)
                 .HasDefaultValue(true)
