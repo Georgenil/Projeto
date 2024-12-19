@@ -4,7 +4,6 @@ using Projeto.Domain.Models;
 using Projeto.Domain.ViewModels;
 using Projeto.Facade.Interfaces;
 using Projeto.Infra.Utils.ExtensionMethod;
-using Projeto.Service;
 
 namespace Projeto.Controllers
 {
@@ -12,30 +11,30 @@ namespace Projeto.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IUserFacade _userFacade;
+        private readonly IUsuarioFacade _userFacade;
 
-        public AuthController(IUserFacade userFacade)
+        public AuthController(IUsuarioFacade userFacade)
         {
             _userFacade = userFacade;
         }
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(UserViewModel request)
+        public async Task<IActionResult> Cadastrar(UsuarioCadastroViewModel usuario)
         {
-            return await _userFacade.Register(request).GetAsyncResult();
+            return await _userFacade.Cadastrar(usuario).GetAsyncResult();
         }
 
         [HttpPost("autenticar")]
-        public async Task<IActionResult> Autenticar(UserLoginViewModel user)
+        public async Task<IActionResult> Autenticar(UsuarioLoginViewModel user)
         {
-            return await _userFacade.Autenticar(user.Login, user.Password).GetAsyncResult();
+            return await _userFacade.Autenticar(user.Login, user.Senha).GetAsyncResult();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserLoginViewModel user)
+        public async Task<IActionResult> Logar(UsuarioLoginViewModel user)
         {
-            return await _userFacade.Login(user).GetAsyncResult();
+            return await _userFacade.Logar(user).GetAsyncResult();
         }
 
         [HttpGet("precisaEstarLogado")]
@@ -45,7 +44,7 @@ namespace Projeto.Controllers
             return $"Autenticado - {User.Identity.Name}";
         }
 
-        private string GenerateTokenMethod(User user)
+        private string GenerateTokenMethod(Usuario user)
         {
             return "";
         }

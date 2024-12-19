@@ -16,8 +16,8 @@ namespace Projeto.Configurations
             services.AddScoped<IColaboradorService, ColaboradorService>();
             services.AddScoped<IColaboradorFacade, ColaboradorFacade>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserFacade, UserFacade>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IUsuarioFacade, UsuarioFacade>();
         }
     }
 }

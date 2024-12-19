@@ -3,7 +3,7 @@ using Projeto.Service;
 
 namespace Projeto.Infra.Data.Repositories
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    public class UserRepository : GenericRepository<Usuario>, IUserRepository
     {
         public UserRepository(IUnitOfWork unitOfWork) : base(unitOfWork) { }
     }

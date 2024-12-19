@@ -2,9 +2,9 @@
 
 namespace Projeto.Service.DTO
 {
-    public class UserDTO
+    public class UsuarioDTO
     {
-        public User user { get; set; }
+        public Usuario usuario { get; set; }
         public string Token { get; set; }
         public string TokenAtualizacao { get; set; }
         public long TokenValidade { get; set; }

@@ -9,23 +9,23 @@ using System.Net;
 
 namespace Projeto.Facade.Facades
 {
-    public class UserFacade : IUserFacade
+    public class UsuarioFacade : IUsuarioFacade
     {
         private readonly IMapper _mapper;
-        private readonly IUserService _userService;
+        private readonly IUsuarioService _userService;
 
-        public UserFacade(IMapper mapper, IUserService userService)
+        public UsuarioFacade(IMapper mapper, IUsuarioService userService)
         {
             _mapper = mapper;
             _userService = userService;
         }
 
-        public async Task<Response<UserViewModel>> Login(UserLoginViewModel user)
+        public async Task<Response<UsuarioViewModel>> Logar(UsuarioLoginViewModel user)
         {
-            var response = new Response<UserViewModel>();
+            var response = new Response<UsuarioViewModel>();
             try
             {
-                var result = await _userService.Login(_mapper.Map<User>(user));
+                var result = await _userService.Logar(_mapper.Map<Usuario>(user));
 
                 if (result.Status != HttpStatusCode.OK)
                 {
@@ -33,16 +33,16 @@ namespace Projeto.Facade.Facades
                 }
                 else if (result.Entity != null)
                 {
-                    response.Entity = _mapper.Map<UserViewModel>(result.Entity);
+                    response.Entity = _mapper.Map<UsuarioViewModel>(result.Entity);
                 }
             }
             catch (Exception ex) { }
             return response;
         }
 
-        public async Task<Response<UserViewModel>> Autenticar(string login, string senha)
+        public async Task<Response<UsuarioViewModel>> Autenticar(string login, string senha)
         {
-            var response = new Response<UserViewModel>();
+            var response = new Response<UsuarioViewModel>();
             try
             {
                 var result = await _userService.Autenticar(login, senha);
@@ -53,7 +53,7 @@ namespace Projeto.Facade.Facades
                 }
                 else if (result.Entity != null)
                 {
-                    response.Entity = _mapper.Map<UserViewModel>(result.Entity);
+                    response.Entity = _mapper.Map<UsuarioViewModel>(result.Entity);
                 }
             }
             catch (Exception ex)
@@ -63,13 +63,13 @@ namespace Projeto.Facade.Facades
             return response;
         }
 
-        public async Task<Response<UserViewModel>> Register(UserViewModel user)
+        public async Task<Response<UsuarioCadastroViewModel>> Cadastrar(UsuarioCadastroViewModel usuario)
         {
-            var response = new Response<UserViewModel>();
+            var response = new Response<UsuarioCadastroViewModel>();
 
             try
             {
-                var result = await _userService.Register(_mapper.Map<User>(user));
+                var result = await _userService.Cadastrar(_mapper.Map<Usuario>(usuario));
 
                 if (result.Status != HttpStatusCode.OK)
                 {
@@ -77,7 +77,7 @@ namespace Projeto.Facade.Facades
                 }
                 else if (result.Entity != null)
                 {
-                    response.Entity = _mapper.Map<UserViewModel>(result.Entity);
+                    response.Entity = _mapper.Map<UsuarioCadastroViewModel>(result.Entity);
                 }
             }
             catch (Exception ex)

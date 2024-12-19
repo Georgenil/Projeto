@@ -23,7 +23,7 @@ namespace Projeto.Infra.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ColaboradorMap());
-            modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new UsuarioMap());
 
         }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,6 +35,6 @@ namespace Projeto.Infra.Data
         }
 
         public virtual DbSet<Colaborador> Colaboradores { get; set; }
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Usuario> Usuarios { get; set; }
     }
 }

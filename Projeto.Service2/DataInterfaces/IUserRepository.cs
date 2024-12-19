@@ -2,7 +2,7 @@
 
 namespace Projeto.Service
 {
-    public interface IUserRepository : IGenericRepository<User>
+    public interface IUserRepository : IGenericRepository<Usuario>
     {
     }
 }

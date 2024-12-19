@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Projeto.Domain.Models;
-using Projeto.Domain.ViewModels;
 using Projeto.Infra.Utils.Configurations;
 using Projeto.Infra.Utils.ExtensionMethod;
 using Projeto.Service.DTO;
 using Projeto.Utils.ExtensionMethod;
-using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -14,34 +12,34 @@ using System.Text;
 
 namespace Projeto.Service
 {
-    public class UserService : IUserService
+    public class UsuarioService : IUsuarioService
     {
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOptions<AppConfig> _config;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository, IOptions<AppConfig> config)
+        public UsuarioService(IUnitOfWork unitOfWork, IUserRepository userRepository, IOptions<AppConfig> config)
         {
             _unitOfWork = unitOfWork;
             _userRepository = userRepository;
             _config = config;
         }
 
-        public async Task<Response<UserDTO>> Login(User user)
+        public async Task<Response<UsuarioDTO>> Logar(Usuario user)
         {
-            var response = new Response<UserDTO>() { Entity = new UserDTO()};
+            var response = new Response<UsuarioDTO>() { Entity = new UsuarioDTO()};
 
             try
             {
-                string senhaEncriptada = user.Password.ToSha256();
+                string senhaEncriptada = user.Senha.ToSha256();
 
-                var userBD = _userRepository.FindFirstBy(u => u.Login == user.Login && u.Password == senhaEncriptada);
-                if (userBD == null) return new Response<UserDTO>(message: "Usuário ou senha inválidos", status: HttpStatusCode.NotFound);
+                var userBD = _userRepository.FindFirstBy(u => u.Login == user.Login && u.Senha == senhaEncriptada);
+                if (userBD == null) return new Response<UsuarioDTO>(message: "Usuário ou senha inválidos", status: HttpStatusCode.NotFound);
 
-                var token = GenerateToken(user);
-                userBD.Password = string.Empty;
+                var token = GerarToken(user);
+                userBD.Senha = string.Empty;
 
-                response.Entity.user = userBD ;
+                response.Entity.usuario = userBD ;
 
                 response.Entity.Token = token;
             }
@@ -54,18 +52,18 @@ namespace Projeto.Service
         }
 
 
-        public async Task<Response<UserDTO>> Autenticar(string login, string senha)
+        public async Task<Response<UsuarioDTO>> Autenticar(string login, string senha)
         {
-            Response<UserDTO> response = new Response<UserDTO>();
+            Response<UsuarioDTO> response = new Response<UsuarioDTO>();
             response.Status = HttpStatusCode.Unauthorized;
 
             try
             {
                 string senhaEncriptada = senha.ToSha256();
 
-                User user = _userRepository.FindFirstBy(u => u.Login == login && u.Ativo);
+                Usuario user = _userRepository.FindFirstBy(u => u.Login == login && u.Ativo);
 
-                if (user == null) return new Response<UserDTO> { Status = HttpStatusCode.Unauthorized, Message = "Usuário ou senha inválidos" };
+                if (user == null) return new Response<UsuarioDTO> { Status = HttpStatusCode.Unauthorized, Message = "Usuário ou senha inválidos" };
 
                 response = ObterUsuarioLogadoDTO(user, login);
 
@@ -82,17 +80,17 @@ namespace Projeto.Service
             return response;
         }
 
-        public async Task<Response<User>> Register(User user)
+        public async Task<Response<Usuario>> Cadastrar(Usuario user)
         {
-            var response = new Response<User>();
+            var response = new Response<Usuario>();
 
             try
             {
-                if (string.IsNullOrEmpty(user.Password)) return new Response<User>(HttpStatusCode.NotFound, "Senha é obrigatória");
+                if (string.IsNullOrEmpty(user.Senha)) return new Response<Usuario>(HttpStatusCode.NotFound, "Senha é obrigatória");
 
                 user.GUID = Guid.NewGuid();
                 user.Login = user.Login;
-                user.Password = user.Password.ToSha256();
+                user.Senha = user.Senha.ToSha256();
                 user.Ativo = true;
 
 
@@ -102,13 +100,13 @@ namespace Projeto.Service
 
                 if (commited > 0 && user.Id > 0)
                 {
-                    user.Password = null;
+                    user.Senha = null;
                     response.Status = HttpStatusCode.OK;
                     response.Entity = user;
                 }
                 else
                 {
-                    throw new ApplicationException("An error occurred while creating the user");
+                    throw new ApplicationException("An error occurred while creating the usuario");
                 }
             }
             catch (Exception ex)
@@ -118,18 +116,18 @@ namespace Projeto.Service
             return response;
         }
 
-        public Response<UserDTO> ObterUsuarioLogadoDTO(User user, string login)
+        public Response<UsuarioDTO> ObterUsuarioLogadoDTO(Usuario user, string login)
         {
-            Response<UserDTO> response = new Response<UserDTO>();
+            Response<UsuarioDTO> response = new Response<UsuarioDTO>();
 
             try
             {
-                string token = GenerateToken(user);
+                string token = GerarToken(user);
                 long validade = new DateTimeOffset(DateTime.UtcNow.AddMinutes(_config.Value.MinutosJanelaReativacaoToken)).ToUnixTimeSeconds();
 
-                response.Entity = new UserDTO
+                response.Entity = new UsuarioDTO
                 {
-                    user = user,
+                    usuario = user,
                     Token = token,
                     TokenAtualizacao = ObterTokenAtualizacao(login, token, validade),
                     TokenValidade = validade
@@ -145,7 +143,7 @@ namespace Projeto.Service
             return response;
         }
 
-        public string GenerateToken(User user)
+        public string GerarToken(Usuario user)
         {
             string token = string.Empty;
 

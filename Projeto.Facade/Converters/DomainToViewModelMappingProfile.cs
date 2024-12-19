@@ -9,12 +9,13 @@ namespace Projeto.Facade.Converters
     {
         public DomainToViewModelMappingProfile()
         {
-            CreateMap<User, UserViewModel>().ReverseMap();
-            CreateMap<UserDTO, UserViewModel>().ReverseMap();
-            CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<UserViewModel, UserDTO>()
-                .ForMember(d => d.user, opt => opt.MapFrom(s => s)).ReverseMap();
-            CreateMap<User, UserLoginViewModel>().ReverseMap();
+            CreateMap<Usuario, UsuarioViewModel>().ReverseMap();
+            CreateMap<Usuario, UsuarioCadastroViewModel>().ReverseMap();
+            CreateMap<Usuario, UsuarioDTO>().ReverseMap();
+            CreateMap<Usuario, UsuarioLoginViewModel>().ReverseMap();
+            CreateMap<UsuarioDTO, UsuarioViewModel>().ReverseMap();
+            CreateMap<UsuarioViewModel, UsuarioDTO>()
+                .ForMember(d => d.usuario, opt => opt.MapFrom(s => s)).ReverseMap();
 
             CreateMap<Colaborador, ColaboradorViewModel>().ReverseMap();
         }
