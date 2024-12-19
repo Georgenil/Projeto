@@ -1,6 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Projeto;
 using Projeto.Configurations;
 using Projeto.Infra.Data;
+using Projeto.Infra.Utils.Configurations;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +21,28 @@ builder.Configuration
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
+builder.Services.Configure<AppConfig>(
+            builder.Configuration.GetSection("AppConfig")
+        );
+var key = Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("AppConfig:ChaveSecreta"));
+
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 
 
 // Configurando o banco.
@@ -60,7 +86,7 @@ app.UseCors(c =>
 app.UseStaticFiles();
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 // Usando a configuração do swagger
 app.UseSwaggerSetup();

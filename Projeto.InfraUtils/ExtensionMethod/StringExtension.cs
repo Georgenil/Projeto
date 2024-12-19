@@ -11,14 +11,29 @@ namespace Projeto.Utils.ExtensionMethod
     {
         public static string ToSha256(this string valor)
         {
-            var crypt = new HMACSHA512();
-            var hash = new System.Text.StringBuilder();
-            byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(valor));
-            foreach (byte theByte in crypto)
+
+            using (SHA256 sha256Hash = SHA256.Create())
             {
-                hash.Append(theByte.ToString("x2"));
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(valor));
+                byte[] crypto = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(valor));
+
+                var hash = new StringBuilder();
+                foreach (byte theByte in crypto)
+                {
+                    hash.Append(theByte.ToString("x2"));
+                }
+                return hash.ToString();
             }
-            return hash.ToString();
+
+            
+            //var crypt = new HMACSHA512();
+            //var hash = new System.Text.StringBuilder();
+            //byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(valor));
+            //foreach (byte theByte in crypto)
+            //{
+            //    hash.Append(theByte.ToString("x2"));
+            //}
+            //return hash.ToString();
         }
 
         public static int? ToNullableInt(this string valorStr)

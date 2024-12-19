@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Projeto.Domain.Models;
+using Projeto.Domain.ViewModels;
+using Projeto.Facade.Interfaces;
 using Projeto.Infra.Utils.ExtensionMethod;
 using Projeto.Service;
 
@@ -9,19 +12,43 @@ namespace Projeto.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IUserService _userService;
-        public AuthController(IUserService userService)
+        private readonly IUserFacade _userFacade;
+
+        public AuthController(IUserFacade userFacade)
         {
-           _userService = userService;
+            _userFacade = userFacade;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(User request)
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(UserViewModel request)
         {
-            return await _userService.Register(request).GetAsyncResult();
-
+            return await _userFacade.Register(request).GetAsyncResult();
         }
 
+        [HttpPost("autenticar")]
+        public async Task<IActionResult> Autenticar(UserLoginViewModel user)
+        {
+            return await _userFacade.Autenticar(user.Login, user.Password).GetAsyncResult();
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserLoginViewModel user)
+        {
+            return await _userFacade.Login(user).GetAsyncResult();
+        }
+
+        [HttpGet("precisaEstarLogado")]
+        [Authorize]
+        public string PrecisaEstarLogado()
+        {
+            return $"Autenticado - {User.Identity.Name}";
+        }
+
+        private string GenerateTokenMethod(User user)
+        {
+            return "";
+        }
         //private void CreatePasswordHash(string password, out byte[] passwordHash)
         //{
         //    using(var hmac = new HMACSHA512())
