@@ -11,14 +11,14 @@ namespace Projeto.Infra.Data.Mapping
         {
             builder.ToTable("colaborador");
 
-            builder.HasKey(x => x.Id);
+            builder.HasKey(c => c.Id);
 
 
-            builder.Property(x => x.Id)
+            builder.Property(c => c.Id)
                 .HasColumnName("id")
                 .UseIdentityColumn();
 
-            builder.Property(t => t.Nome)
+            builder.Property(c => c.Nome)
                 .HasColumnName("nome")
                 .HasMaxLength(ModelMaxLengthConstants.Nome)
                 .IsRequired();

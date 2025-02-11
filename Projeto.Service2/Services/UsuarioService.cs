@@ -5,6 +5,7 @@ using Projeto.Infra.Utils.Configurations;
 using Projeto.Infra.Utils.ExtensionMethod;
 using Projeto.Service.DTO;
 using Projeto.Utils.ExtensionMethod;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -27,7 +28,7 @@ namespace Projeto.Service
 
         public async Task<Response<UsuarioDTO>> Logar(Usuario user)
         {
-            var response = new Response<UsuarioDTO>() { Entity = new UsuarioDTO()};
+            var response = new Response<UsuarioDTO>() { Entity = new UsuarioDTO() };
 
             try
             {
@@ -39,7 +40,7 @@ namespace Projeto.Service
                 var token = GerarToken(user);
                 userBD.Senha = string.Empty;
 
-                response.Entity.usuario = userBD ;
+                response.Entity.usuario = userBD;
 
                 response.Entity.Token = token;
             }
@@ -80,29 +81,45 @@ namespace Projeto.Service
             return response;
         }
 
-        public async Task<Response<Usuario>> Cadastrar(Usuario user)
+        public async Task<Response<Usuario>> Cadastrar(Usuario Usuario)
         {
             var response = new Response<Usuario>();
+            var messages = new List<string>();
 
             try
             {
-                if (string.IsNullOrEmpty(user.Senha)) return new Response<Usuario>(HttpStatusCode.NotFound, "Senha é obrigatória");
+                if (string.IsNullOrEmpty(Usuario.Login))
+                {
+                    messages.Add("Login é obrigatória".TranslateTo(CultureInfo.CurrentCulture.ToString()));
+                }
 
-                user.GUID = Guid.NewGuid();
-                user.Login = user.Login;
-                user.Senha = user.Senha.ToSha256();
-                user.Ativo = true;
+                if (string.IsNullOrEmpty(Usuario.Senha))
+                {
+                    messages.Add("Senha é obrigatória");
+                }
+
+                if (messages.Count > 0)
+                {
+                    response.Status = HttpStatusCode.BadRequest;
+                    response.Messages = messages.ToArray();
+                    return response;
+                }
+
+                Usuario.GUID = Guid.NewGuid();
+                Usuario.Login = Usuario.Login;
+                Usuario.Senha = Usuario.Senha.ToSha256();
+                Usuario.Ativo = true;
 
 
-                _userRepository.Add(user);
+                _userRepository.Add(Usuario);
 
                 int commited = await _unitOfWork.CommitAsync();
 
-                if (commited > 0 && user.Id > 0)
+                if (commited > 0 && Usuario.Id > 0)
                 {
-                    user.Senha = null;
+                    Usuario.Senha = null;
                     response.Status = HttpStatusCode.OK;
-                    response.Entity = user;
+                    response.Entity = Usuario;
                 }
                 else
                 {
@@ -111,7 +128,7 @@ namespace Projeto.Service
             }
             catch (Exception ex)
             {
-                response.Message = $"Ocorreu um erro ao registrar o usuário. Login: {user.Login}";
+                response.Message = $"Ocorreu um erro ao registrar o usuário. Login: {Usuario.Login}";
             }
             return response;
         }

@@ -25,6 +25,14 @@ namespace Projeto.Infra.Utils.ExtensionMethod
 
         public static async Task<IActionResult> GetAsyncResult<TEntity>(this Task<Response<TEntity>> response)
         {
+            string responseValue = string.Empty;
+
+            if (response.Result.Messages != null && response.Result.Messages.Length > 0)
+                responseValue = string.Concat(string.Join(" \n ", response.Result.Messages));
+
+            if (response.Result.Entity != null && response.Result.Entity.GetType() == typeof(string))
+                responseValue = response.Result.Entity.ToString();
+
             return GetResult(await response);
         }
         public static async Task<IActionResult> GetAsyncResult<TEntity>(this Task<PagedResponse<TEntity>> response)
