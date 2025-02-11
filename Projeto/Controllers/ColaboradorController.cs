@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Projeto.Domain.Utils;
+using Projeto.Domain.ViewModels;
 using Projeto.Facade;
 using Projeto.Infra.Utils.ExtensionMethod;
 
@@ -20,17 +22,17 @@ namespace Projeto.Controllers
         /// </summary>
         /// <returns>Lista de colaboradores</returns>
         [HttpGet("listar")]
-        public IActionResult BuscarTodos()
+        public async Task<IActionResult> BuscarTodos()
         {
-            return  _colaboradorFacade.BuscarTodos().GetResult();
+            return await _colaboradorFacade.BuscarTodos().GetAsyncResult();
         }
 
 
-        //[HttpPost("cadastrar")]
-        //public async Task<IActionResult> Cadastrar(ColaboradorViewModel model)
-        //{
-        //    return new ResponseHelper().CreateResponse(await _colaboradorService.Cadastrar(model));
-        //}
+        [HttpPost("cadastrar")]
+        public async Task<IActionResult> Cadastrar(ColaboradorViewModel model)
+        {
+            return await _colaboradorFacade.Cadastrar(model).GetAsyncResult();
+        }
 
         //[HttpPost("editar")]
         //public async Task<IActionResult> Editar([FromBody] ColaboradorViewModel model)

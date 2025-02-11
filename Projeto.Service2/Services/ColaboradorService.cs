@@ -14,13 +14,13 @@ namespace Projeto.Service
             _unitOfWork = unitOfWork;
             _colaboradorRepository = colaboradorRepository;
         }
-        public Response<IList<Colaborador>> BuscarTodos()
+        public async Task<Response<IList<Colaborador>>> BuscarTodos()
         {
             var response = new Response<IList<Colaborador>>();
 
             try
             {
-                response.Entity = _colaboradorRepository.GetAll();
+                response.Entity = await _colaboradorRepository.GetAllAsync();
             }
             catch
             {
@@ -53,15 +53,15 @@ namespace Projeto.Service
             {
                 if (colaborador == null) return new Response<Colaborador>(HttpStatusCode.NotFound, "Colaborador nulo");
 
-                var colaboradorBD = _colaboradorRepository.FindFirstBy(x => x.Nome.ToLower().Trim().Equals(colaborador.Nome.ToLower().Trim()));
+                var colaboradorBD = await _colaboradorRepository.FindFirstByAsync(x => x.Nome.ToLower().Trim().Equals(colaborador.Nome.ToLower().Trim()));
 
                 if (colaboradorBD != null) return new Response<Colaborador>(HttpStatusCode.InternalServerError, "Este colaborador já foi cadastrado");
 
 
-                await _colaboradorRepository.AddAsync(colaborador);
+                var colaboradorAdicionado = await _colaboradorRepository.AddAsync(colaborador);
                 await _unitOfWork.CommitAsync();
 
-                response.Entity = colaborador;
+                response.Entity = colaboradorAdicionado;
             }
             catch
             {

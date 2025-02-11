@@ -17,21 +17,21 @@ namespace Projeto.Facade
             _colaboradorService = colaboradorService;
         }
 
-        public Response<IList<ColaboradorViewModel>> BuscarTodos()
+        public async Task<Response<IList<ColaboradorViewModel>>> BuscarTodos()
         {
             var response = new Response<IList<ColaboradorViewModel>>();
 
             try
             {
-                var result = _colaboradorService.BuscarTodos();
+                var resultAsync = _colaboradorService.BuscarTodos();
 
-                if (result.Status != HttpStatusCode.OK)
+                if (resultAsync.Result.Status != HttpStatusCode.OK)
                 {
-                    response.Copy(result);
+                    response.Copy(resultAsync.Result);
                 }
                 else
                 {
-                    response.Entity = _mapper.Map<IList<ColaboradorViewModel>>(result.Entity);
+                    response.Entity = _mapper.Map<IList<ColaboradorViewModel>>(resultAsync.Result.Entity);
                     response.Status = HttpStatusCode.OK;
                 }
             }
@@ -52,7 +52,7 @@ namespace Projeto.Facade
             {
                 var result = _colaboradorService.Cadastrar(_mapper.Map<Colaborador>(model));
 
-                if (result.Result.Status == HttpStatusCode.OK)
+                if (result.Result.Status != HttpStatusCode.OK)
                 {
                     response.Copy(result.Result);
                 }
