@@ -18,7 +18,7 @@ namespace Projeto.Test
             _colaboradorService = new ColaboradorService(_unitOfWorkMock.Object, _colaboradorRepositoryMock.Object);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Buscar uma lista de colaboradores com sucesso.")]
         public async Task BuscarTodos_Sucesso()
         {
             // Arrange
