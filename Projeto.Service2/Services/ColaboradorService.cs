@@ -57,11 +57,25 @@ namespace Projeto.Service
 
                 if (colaboradorBD != null) return new Response<Colaborador>(HttpStatusCode.InternalServerError, "Este colaborador já foi cadastrado");
 
+                //Exemplo de transação para quando fizer mais de uma operação e todas precisarem ser bem sucedidadas.
+                using (var transaction = await _unitOfWork._dbContext.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var colaboradorAdicionado = await _colaboradorRepository.AddAsync(colaborador);
+                        await _unitOfWork.CommitAsync();
+                        response.Entity = colaboradorAdicionado;
 
-                var colaboradorAdicionado = await _colaboradorRepository.AddAsync(colaborador);
-                await _unitOfWork.CommitAsync();
+                        await transaction.CommitAsync();
 
-                response.Entity = colaboradorAdicionado;
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        return new Response<Colaborador>(HttpStatusCode.InternalServerError, "Erro na transação de cadastro de colaboradores.");
+                    }
+                }
+
             }
             catch
             {
