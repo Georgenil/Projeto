@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Projeto.Domain.Models;
 using Projeto.Infra.Data.Mapping;
-using Projeto.Domain.Models;
 
 namespace Projeto.Infra.Data
 {
@@ -24,17 +23,16 @@ namespace Projeto.Infra.Data
         {
             modelBuilder.ApplyConfiguration(new ColaboradorMap());
             modelBuilder.ApplyConfiguration(new UsuarioMap());
+            modelBuilder.ApplyConfiguration(new ArquivoMap());
 
         }
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
-        //}
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
         public virtual DbSet<Colaborador> Colaboradores { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<Arquivo> Arquivos { get; set; }
     }
 }

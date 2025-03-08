@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Projeto.Domain.Models;
+using Projeto.Infra.Data.Interfaces;
 using Projeto.Infra.Utils.Configurations;
 using Projeto.Infra.Utils.ExtensionMethod;
 using Projeto.Service.DTO;

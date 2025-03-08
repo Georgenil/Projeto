@@ -16,12 +16,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projeto.Domain", "Projeto.Domain\Projeto.Domain.csproj", "{5F116C0C-6315-4F51-A503-A5A202F8F02D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projeto.Infra.Data", "Projeto.Infra.Data\Projeto.Infra.Data.csproj", "{021A1270-4976-4D92-8D3B-6DF7762DC6B8}"
-	ProjectSection(ProjectDependencies) = postProject
-		{94110A74-3B5F-4874-9F47-AAFFB4A0D9EC} = {94110A74-3B5F-4874-9F47-AAFFB4A0D9EC}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projeto.Service", "Projeto.Service2\Projeto.Service.csproj", "{94110A74-3B5F-4874-9F47-AAFFB4A0D9EC}"
 	ProjectSection(ProjectDependencies) = postProject
+		{021A1270-4976-4D92-8D3B-6DF7762DC6B8} = {021A1270-4976-4D92-8D3B-6DF7762DC6B8}
+		{5F116C0C-6315-4F51-A503-A5A202F8F02D} = {5F116C0C-6315-4F51-A503-A5A202F8F02D}
 		{7345C487-C9C5-4B2D-BD63-D54C2A6123C1} = {7345C487-C9C5-4B2D-BD63-D54C2A6123C1}
 	EndProjectSection
 EndProject

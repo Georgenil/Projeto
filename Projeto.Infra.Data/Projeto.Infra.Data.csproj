@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Projeto.InfraUtils\Projeto.Infra.Utils.csproj" />
-    <ProjectReference Include="..\Projeto.Service2\Projeto.Service.csproj" />
+    <!--<ProjectReference Include="..\Projeto.Service2\Projeto.Service.csproj" />-->
   </ItemGroup>
 
 </Project>

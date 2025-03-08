@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Projeto.Service;
+using Projeto.Infra.Data.Interfaces;
 
 namespace Projeto.Infra.Data
 {

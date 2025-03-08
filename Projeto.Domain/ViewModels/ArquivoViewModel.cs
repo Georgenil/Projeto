@@ -1,6 +1,6 @@
-﻿namespace Projeto.Domain.Models
+﻿namespace Projeto.Domain.ViewModels
 {
-    public class Arquivo : Base
+    public class ArquivoViewModel : BaseViewModel
     {
         public string Nome { get; set; }
         public string Extensao { get; set; }

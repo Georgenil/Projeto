@@ -1,4 +1,5 @@
 using Projeto.Domain.Models;
+using Projeto.Infra.Data.Interfaces;
 using Projeto.Service;
 
 namespace Projeto.Test

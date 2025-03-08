@@ -1,6 +1,6 @@
 ﻿using Projeto.Domain.Models;
 
-namespace Projeto.Service
+namespace Projeto.Infra.Data.Interfaces
 {
     public interface IColaboradorRepository : IGenericRepository<Colaborador>
     {

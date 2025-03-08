@@ -1,4 +1,5 @@
 ﻿using Projeto.Domain.Models;
+using Projeto.Infra.Data.Interfaces;
 using Projeto.Infra.Utils.ExtensionMethod;
 using System.Net;
 

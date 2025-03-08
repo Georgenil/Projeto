@@ -89,6 +89,12 @@ namespace Projeto.Infra.Utils.ExtensionMethod
             Status = status;
             Message = message;
         }
+        public Response(HttpStatusCode status, string message, TEntity entity)
+        {
+            Status = status;
+            Message = message;
+            Entity = entity;
+        }
 
         public virtual void Copy<OtherEntity>(Response<OtherEntity> other)
         {

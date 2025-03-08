@@ -1,4 +1,4 @@
-﻿namespace Projeto.Service
+﻿namespace Projeto.Infra.Data.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {

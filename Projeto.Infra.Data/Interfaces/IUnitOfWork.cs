@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Projeto.Service
+namespace Projeto.Infra.Data.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
