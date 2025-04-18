@@ -26,6 +26,7 @@ Criei essa API com a finalidade de mostrar alguns dos conceitos que já conheço
 ## 🤝 Decisões arquiteturais
 
 - 5 Camadas
+- Arquitetura Limpa
 - MVVM
 - Apliquei alguns princípios de SOLID
 - Repository Pattern
